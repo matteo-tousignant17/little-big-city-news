@@ -1,0 +1,58 @@
+{
+  "_comment": "What's Up Boise sponsor configuration. Tier pricing: Gold $10k/yr, Silver $6k/yr, Bronze $3k/yr.",
+  "_packages": {
+    "gold": {
+      "annual_price": 10000,
+      "placements": "Top of newsletter, dedicated sponsor block, social mention, logo in header",
+      "exclusivity": "Category exclusive — no competing brands",
+      "newsletter_issues": 52
+    },
+    "silver": {
+      "annual_price": 6000,
+      "placements": "Mid-newsletter sponsor block with logo + tagline + CTA button",
+      "exclusivity": "Category preferred",
+      "newsletter_issues": 52
+    },
+    "bronze": {
+      "annual_price": 3000,
+      "placements": "Footer sponsor mention with link",
+      "exclusivity": "Non-exclusive",
+      "newsletter_issues": 52
+    }
+  },
+  "sponsors": [
+    {
+      "name": "Boise Premier Realty",
+      "tagline": "Your home in the Treasure Valley — expert agents, zero pressure.",
+      "url": "https://example.com/boise-realty",
+      "tier": "gold",
+      "active": false,
+      "image_url": "",
+      "promo_code": "",
+      "cta_text": "Browse Listings",
+      "category": "real_estate"
+    },
+    {
+      "name": "Boise Coffee Co.",
+      "tagline": "Locally roasted, ridiculously good. Pick up a bag this weekend.",
+      "url": "https://example.com/boise-coffee",
+      "tier": "silver",
+      "active": false,
+      "image_url": "",
+      "promo_code": "WHATSUPBOISE",
+      "cta_text": "Shop Now",
+      "category": "retail"
+    },
+    {
+      "name": "YOUR BUSINESS HERE",
+      "tagline": "Reach thousands of engaged Boise locals every Thursday morning.",
+      "url": "mailto:hello@whatsupboise.com",
+      "tier": "bronze",
+      "active": true,
+      "image_url": "",
+      "promo_code": "",
+      "cta_text": "Get in Touch",
+      "category": "placeholder"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "city": "Boise",
+  "state": "Idaho",
+  "state_abbr": "ID",
+  "slug": "boise",
+  "newsletter_name": "What's Up Boise",
+  "tagline": "Your weekly guide to the best of Boise",
+  "greeting": "Hey Boise fam!",
+  "timezone": "America/Boise",
+  "beehiiv_publication_id": "YOUR_BEEHIIV_PUBLICATION_ID",
+  "send_day": "thursday",
+  "send_hour": 7,
+  "event_sources": [
+    {
+      "name": "Eventbrite Boise",
+      "url": "https://www.eventbrite.com/d/id--boise/events/",
+      "type": "eventbrite"
+    },
+    {
+      "name": "City of Boise Events",
+      "url": "https://www.cityofboise.org/departments/parks-and-recreation/events/",
+      "type": "city_calendar"
+    },
+    {
+      "name": "Idaho Statesman Events",
+      "url": "https://www.idahostatesman.com/entertainment/things-to-do/",
+      "type": "news_events"
+    },
+    {
+      "name": "Treefort Music Fest / Boise Venues",
+      "url": "https://www.boiseweekly.com/boise/EventSearch",
+      "type": "alt_weekly"
+    },
+    {
+      "name": "Visit Boise Events",
+      "url": "https://www.visitboise.org/events/",
+      "type": "tourism"
+    },
+    {
+      "name": "Knitting Factory Boise",
+      "url": "https://www.knittingfactory.com/boise/",
+      "type": "venue"
+    }
+  ],
+  "real_estate": {
+    "zillow_search_url": "https://www.zillow.com/boise-id/",
+    "market_area": "Boise, ID",
+    "featured_neighborhoods": ["Downtown Boise", "North End", "East End", "Hyde Park", "Bench"]
+  },
+  "social": {
+    "facebook_group": "",
+    "instagram": "",
+    "twitter": ""
+  }
+}

@@ -1,0 +1,94 @@
+name: Weekly Newsletter — Thursday Autopilot
+
+on:
+  # Every Thursday at 5:00 AM UTC (10 PM Wednesday MT / midnight ET)
+  # This gives the run 2 hours to complete before the 7 AM local send
+  schedule:
+    - cron: "0 5 * * 4"
+
+  # Manual trigger with optional dry-run
+  workflow_dispatch:
+    inputs:
+      city_slug:
+        description: "City slug to run (leave empty for default from env)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Dry run (build but don't send to beehiiv)"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  send-newsletter:
+    name: Build & Send Newsletter
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create logs directory
+        run: mkdir -p logs drafts
+
+      - name: Run newsletter
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          CITY_SLUG: ${{ vars.CITY_SLUG || 'boise' }}
+          HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'none' }}
+        run: |
+          CITY="${{ github.event.inputs.city_slug || env.CITY_SLUG }}"
+          DRY="${{ github.event.inputs.dry_run || 'false' }}"
+
+          CMD="python main.py"
+          if [ -n "$CITY" ]; then CMD="$CMD --city $CITY"; fi
+          if [ "$DRY" = "true" ]; then CMD="$CMD --dry-run"; fi
+
+          echo "Running: $CMD"
+          $CMD
+
+      - name: Upload newsletter draft artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-draft-${{ github.run_id }}
+          path: drafts/
+          retention-days: 30
+
+      - name: Upload logs artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-logs-${{ github.run_id }}
+          path: logs/
+          retention-days: 7
+
+  # Multi-city run (uncomment when you have 2+ cities)
+  # send-newsletter-matrix:
+  #   strategy:
+  #     matrix:
+  #       city: [boise, portland, denver]
+  #   name: Newsletter — ${{ matrix.city }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with: { python-version: "3.12" }
+  #     - run: pip install -r requirements.txt
+  #     - run: python main.py --city ${{ matrix.city }}
+  #       env:
+  #         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  #         BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
+  #         FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
