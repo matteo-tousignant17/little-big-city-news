@@ -86,6 +86,7 @@ def create_beehiiv_post(
     }
 
     payload: dict = {
+        "title": subject_line,
         "subject": subject_line,
         "preview_text": f"Your weekly guide to the best of {ctx.city_config.city} 🎉",
         "body_html": html_content,

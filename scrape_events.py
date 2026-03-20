@@ -62,8 +62,8 @@ class EventScraper:
     def scrape_url(self, url: str, source_name: str) -> str:
         """Scrape a single URL and return clean markdown text."""
         try:
-            result = self.firecrawl.scrape_url(
-                url,
+            result = self.firecrawl.scrape(
+                url=url,
                 formats=["markdown"],
                 actions=[{"type": "wait", "milliseconds": 2000}],
             )
