@@ -20,8 +20,6 @@ BASE_DIR = Path(__file__).parent
 
 ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")
 BEEHIIV_API_KEY: str = os.environ.get("BEEHIIV_API_KEY", "")
-BEEHIIV_EMAIL: str = os.environ.get("BEEHIIV_EMAIL", "")
-BEEHIIV_PASSWORD: str = os.environ.get("BEEHIIV_PASSWORD", "")
 FIRECRAWL_API_KEY: str = os.environ.get("FIRECRAWL_API_KEY", "")
 
 CITY_SLUG: str = os.environ.get("CITY_SLUG", "boise")
@@ -166,12 +164,11 @@ def load_sponsors(slug: Optional[str] = None) -> list[Sponsor]:
 
 
 def validate_keys() -> list[str]:
-    """Return list of missing required environment variables."""
+    """Return list of missing required API keys."""
     missing = []
     if not ANTHROPIC_API_KEY:
         missing.append("ANTHROPIC_API_KEY")
     if not FIRECRAWL_API_KEY:
         missing.append("FIRECRAWL_API_KEY")
-    if not BEEHIIV_EMAIL or not BEEHIIV_PASSWORD:
-        missing.append("BEEHIIV_EMAIL + BEEHIIV_PASSWORD")
+    # beehiiv auth is checked at publish time (BEEHIIV_AUTH_STATE env var or auth_state.json)
     return missing

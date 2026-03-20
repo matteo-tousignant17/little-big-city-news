@@ -47,8 +47,7 @@ jobs:
       - name: Run newsletter
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          BEEHIIV_EMAIL: ${{ secrets.BEEHIIV_EMAIL }}
-          BEEHIIV_PASSWORD: ${{ secrets.BEEHIIV_PASSWORD }}
+          BEEHIIV_AUTH_STATE: ${{ secrets.BEEHIIV_AUTH_STATE }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           CITY_SLUG: ${{ vars.CITY_SLUG || 'boise' }}
           HUMAN_APPROVAL: ${{ vars.HUMAN_APPROVAL || 'none' }}
