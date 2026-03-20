@@ -1,8 +1,8 @@
 """
-send_newsletter.py — beehiiv API integration for What's Up [CITY].
+send_newsletter.py — beehiiv publishing for What's Up [CITY].
 
 Handles:
-- Creating a draft post via beehiiv API
+- Creating a post via Playwright browser automation (no paid API tier required)
 - Scheduling the post for Thursday morning delivery
 - Human-in-loop approval (local draft save or email)
 - Sending email approval previews
@@ -20,6 +20,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from beehiiv_browser import publish_via_browser
 from config import (
     BEEHIIV_API_KEY,
     HUMAN_APPROVAL,
@@ -71,50 +72,31 @@ def create_beehiiv_post(
     scheduled: bool = True,
 ) -> dict:
     """
-    Create a post in beehiiv via API.
-    Returns the API response dict.
-
-    Docs: https://developers.beehiiv.com/api-reference/posts/create
+    Create a post in beehiiv via browser automation (no paid API tier required).
+    Returns a result dict with the post URL.
     """
     publication_id = ctx.city_config.beehiiv_publication_id
     if not publication_id or publication_id == "YOUR_BEEHIIV_PUBLICATION_ID":
         raise ValueError("beehiiv publication_id not configured. Set it in cities/<slug>/config.json")
 
-    headers = {
-        "Authorization": f"Bearer {BEEHIIV_API_KEY}",
-        "Content-Type": "application/json",
-    }
-
-    payload: dict = {
-        "title": subject_line,
-        "subject": subject_line,
-        "preview_text": f"Your weekly guide to the best of {ctx.city_config.city} 🎉",
-        "body_html": html_content,
-        "status": "draft",  # always create as draft first
-        "platform": "email",
-        "audience": "free",
-    }
-
-    if scheduled:
-        scheduled_at = get_scheduled_send_time(ctx.city_config)
-        payload["scheduled_at"] = scheduled_at
+    scheduled_at = get_scheduled_send_time(ctx.city_config) if scheduled else None
+    if scheduled_at:
         logger.info(f"Scheduling beehiiv post for {scheduled_at}")
-    else:
-        payload["status"] = "draft"
 
-    url = f"{BEEHIIV_API_BASE}/publications/{publication_id}/posts"
+    logger.info(f"Publishing beehiiv post via browser: {subject_line}")
+    result = publish_via_browser(
+        publication_id=publication_id,
+        title=subject_line,
+        subject=subject_line,
+        html_content=html_content,
+        scheduled_at=scheduled_at,
+    )
 
-    logger.info(f"Creating beehiiv post: {subject_line}")
-    response = requests.post(url, headers=headers, json=payload, timeout=30)
+    if not result["success"]:
+        raise RuntimeError(f"beehiiv browser publish failed: {result['error']}")
 
-    if response.status_code not in (200, 201):
-        logger.error(f"beehiiv API error {response.status_code}: {response.text}")
-        response.raise_for_status()
-
-    data = response.json()
-    post_id = data.get("data", {}).get("id", "")
-    logger.info(f"beehiiv post created: id={post_id}")
-    return data
+    logger.info(f"beehiiv post created: {result['post_url']}")
+    return {"data": {"url": result["post_url"]}, "browser_result": result}
 
 
 def publish_beehiiv_post(publication_id: str, post_id: str) -> dict:
