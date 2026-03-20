@@ -67,7 +67,7 @@ class EventScraper:
                 formats=["markdown"],
                 actions=[{"type": "wait", "milliseconds": 2000}],
             )
-            markdown = result.get("markdown", "") or ""
+            markdown = result.markdown or ""
             logger.info(f"Scraped {source_name}: {len(markdown)} chars")
             return markdown[:15000]  # cap at 15k chars per source
         except Exception as e:
