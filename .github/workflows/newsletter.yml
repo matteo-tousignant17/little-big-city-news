@@ -75,7 +75,7 @@ jobs:
           path: logs/
           retention-days: 7
 
-  # Multi-city run (uncomment when you have 2+ cities)
+  # Multi-city run (uncomment when you have 2+ cities)ds
   # send-newsletter-matrix:
   #   strategy:
   #     matrix:
